@@ -205,47 +205,216 @@ mysql -u root -p votre_database < sql/init_tables.sql
 
 ## 🔧 Scripts disponibles
 
+Le template inclut plusieurs scripts NPM pour faciliter le développement :
+
+### Scripts de base
 ```bash
-# Lancer le bot
+# Lancer le bot en production
 npm start
 
-# Mode développement
+# Mode développement (identique à start)
 npm run dev
 
-# Vérifier le code
+# Aide pour la configuration initiale
+npm run setup
+```
+
+### Scripts de qualité de code
+```bash
+# Vérifier le code avec ESLint
 npm run lint
 
-# Corriger automatiquement
+# Corriger automatiquement les erreurs ESLint
 npm run lint:fix
 
-# Formater le code
+# Formater le code avec Prettier
 npm run prettier
-
-# Aide configuration
-npm run setup
 ```
 
 ---
 
-## 📏 Qualité du code
+## 🛠️ Initialisation du projet
 
-### ESLint
-Le projet utilise ESLint pour maintenir la qualité du code :
+### Installation complète
+Voici les étapes détaillées pour initialiser votre bot Discord :
 
 ```bash
-# Vérifier le code
-npm run lint
+# 1. Cloner le repository
+git clone https://github.com/yamakajump/discord-bot-template.git
+cd discord-bot-template
 
-# Corriger automatiquement les erreurs
-npm run lint:fix
+# 2. Installer toutes les dépendances
+npm install
+
+# 3. Créer le fichier de configuration (si pas déjà fait)
+npm run setup
+
+# 4. Configurer votre fichier .env
+# Copiez .env.example vers .env et remplissez vos tokens
+cp .env.example .env
+nano .env  # ou votre éditeur préféré
+
+# 5. (Optionnel) Initialiser la base de données
+# Les tables se créent automatiquement au premier lancement
+# Ou manuellement : mysql -u root -p votre_database < sql/init_tables.sql
+
+# 6. Vérifier que tout fonctionne
+npm run lint
+npm run prettier
+
+# 7. Lancer le bot
+npm start
 ```
 
-### Prettier
-Formatage automatique pour une cohérence du style :
+### Configuration des tokens Discord
 
+1. **Créer une application Discord** :
+   - Allez sur [Discord Developer Portal](https://discord.com/developers/applications)
+   - Cliquez "New Application" et donnez un nom à votre bot
+   - Dans l'onglet "Bot", cliquez "Add Bot"
+
+2. **Récupérer vos tokens** :
+   - **TOKEN** : Dans l'onglet "Bot", copiez le token
+   - **ID** : Dans l'onglet "General Information", copiez l'Application ID
+
+3. **Inviter le bot** :
+   - Dans l'onglet "OAuth2 > URL Generator"
+   - Sélectionnez "bot" et "applications.commands"
+   - Ajoutez les permissions nécessaires
+   - Utilisez l'URL générée pour inviter votre bot
+
+### Première exécution
 ```bash
-# Formater tout le code
+# Le bot va automatiquement :
+# - Créer les tables de base de données (si configurées)
+# - Enregistrer les commandes slash sur Discord
+# - Se connecter et afficher "Bot prêt !"
+
+npm start
+```
+
+---
+
+## 📏 Qualité du code et outils de développement
+
+Ce template inclut des outils modernes pour maintenir un code de qualité professionnelle.
+
+### 🔍 ESLint - Analyse statique du code
+
+**À quoi ça sert :**
+- Détecte les erreurs de syntaxe et les bugs potentiels
+- Applique des règles de style cohérentes
+- Améliore la lisibilité et la maintenabilité du code
+- Évite les erreurs courantes en JavaScript
+
+**Comment l'utiliser :**
+```bash
+# Analyser tout le projet
+npm run lint
+
+# Voir les erreurs en détail
+npm run lint -- --verbose
+
+# Corriger automatiquement les erreurs réparables
+npm run lint:fix
+
+# Analyser un fichier spécifique
+npx eslint commands/exemple1.js
+```
+
+**Exemple de sortie :**
+```
+✨ ESLint vérifie votre code...
+
+commands/exemple1.js
+  12:5  error  'unusedVar' is assigned a value but never used  no-unused-vars
+  25:1  error  Missing semicolon                               semi
+
+✖ 2 problems (2 errors, 0 warnings)
+  1 error potentially fixable with the --fix option.
+```
+
+### 🎨 Prettier - Formatage automatique
+
+**À quoi ça sert :**
+- Formate automatiquement le code selon des règles cohérentes
+- Élimine les débats sur le style de code dans l'équipe
+- Assure une présentation uniforme dans tout le projet
+- Supporte JSON, Markdown, et autres formats
+
+**Comment l'utiliser :**
+```bash
+# Formater tout le projet
 npm run prettier
+
+# Formater des fichiers spécifiques
+npx prettier --write "commands/*.js"
+
+# Vérifier le formatage sans modifier
+npx prettier --check "**/*.{js,json,md}"
+
+# Formater un seul fichier
+npx prettier --write index.js
+```
+
+**Configuration :**
+Le projet utilise une configuration Prettier optimisée pour JavaScript. Vous pouvez la personnaliser en créant un fichier `.prettierrc` :
+
+```json
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": false,
+  "printWidth": 80,
+  "tabWidth": 2
+}
+```
+
+### 🔄 Workflow recommandé
+
+**Avant de committer :**
+```bash
+# 1. Formater le code
+npm run prettier
+
+# 2. Vérifier et corriger les erreurs
+npm run lint:fix
+
+# 3. Vérifier qu'il n'y a plus d'erreurs
+npm run lint
+
+# 4. Tester le bot
+npm start
+```
+
+**Intégration avec votre éditeur :**
+- **VS Code** : Installez les extensions ESLint et Prettier
+- **WebStorm** : ESLint et Prettier sont intégrés par défaut
+- **Vim/Neovim** : Utilisez des plugins comme ALE ou CoC
+
+### ⚙️ Configuration avancée
+
+**Ignorer des fichiers :**
+Créez `.eslintignore` et `.prettierignore` :
+```
+node_modules/
+*.min.js
+dist/
+```
+
+**Règles ESLint personnalisées :**
+Modifiez `eslint.config.mjs` pour ajuster les règles :
+```javascript
+export default [
+  // ...existing config...
+  {
+    rules: {
+      "no-console": "warn",  // Permettre console.log en dev
+      "no-unused-vars": "error",
+      // Vos règles personnalisées
+    }
+  }
+];
 ```
 
 ### Conventions
