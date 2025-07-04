@@ -324,15 +324,6 @@ Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de 
 
 ---
 
-## 🙏 Remerciements
-
-- [Discord.js](https://discord.js.org/) pour l'excellente librairie
-- La communauté Discord pour les ressources et l'aide
-- Tous les contributeurs qui améliorent ce template
-
----
-
 <div align="center">
-  <p>Fait avec ❤️ pour la communauté Discord</p>
   <p><a href="#-discord-bot-template">⬆️ Retour en haut</a></p>
 </div>
